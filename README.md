@@ -7,7 +7,7 @@
    - Every widget should be QWidget. 
    - If you want to use QtDesigner, don't change the generated file.
    - File generated from 'widgetname'.ui should be named 'widgetname'_ui.py 
-   - Widget should be controlled via class named 'widgetname' located in 'widgetname'.py. This class should have method called update. 
+   - Widget should be controlled via class named 'widgetname' located in 'widgetname'.py. This class should have a method called update. 
    - If it's possible try to keep your widget easily resizable. Add minimum and maximum size.
    - Qt is based on signals/interrupts. Heavy tasks should be handled by QThreads otherwise application will freeze. 
 
@@ -18,4 +18,4 @@ Use style sheets to create nice labels, buttons etc. Some terrible examples are 
 
 
 
-Good PyQt tutorial: [LearnpyQt](www.learnpyqt.com "LearnpyQt") 
+Good PyQt tutorial: [LearnpyQt](https://www.learnpyqt.com/ "LearnpyQt") 

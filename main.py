@@ -8,7 +8,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(MainWindow,self).__init__()
         self.setupUi(self)
-        #self.setStyleSheet(open('style/mainWindow.css').read())
+        self.setStyleSheet(open('style/mainWindow.css').read())
 
     def getControl(self):
         return self.connectionBar
