@@ -1,0 +1,17 @@
+QPushButton#b_connect {
+    background-color: rgb(125, 200, 255);
+    color: white;
+    border-style: solid;
+    border-color: rgb(125, 200, 255);
+    border-width: 2px;
+    border-radius: 5px;
+    width: 75px;
+    height: 20px
+}
+ QPushButton#b_connect:hover {
+        border-color: rgb(85, 255, 127);
+        background-color: rgb(28, 105, 161);
+ }
+QWidget{
+    font-size: 11px;
+}
