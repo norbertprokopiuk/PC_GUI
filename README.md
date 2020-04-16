@@ -18,4 +18,4 @@ Use style sheets to create nice labels, buttons etc. Some terrible examples are 
 
 
 
-Good PyQt tutorial: [LearnpyQt](https://www.learnpyqt.com/ "LearnpyQt") 
+Good PyQt tutorial: [LearnpyQt](www.learnpyqt.com "LearnpyQt") 
