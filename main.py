@@ -19,7 +19,6 @@ def run():
     window = MainWindow()
     window.show()
     control = window.getControl()
-    control.showWidget()
     
     app.exec_()
 
