@@ -1,34 +1,62 @@
-
+import asyncore
+import socket
 from PyQt5 import QtCore
 
-import time
 
-class connectionHandler(QtCore.QObject):   
+
+class clientHandler(asyncore.dispatcher_with_send,QtCore.QObject):
+    
     dataReceived = QtCore.pyqtSignal(object)
-    def __init__(self):
-      super(connectionHandler,self).__init__()
-      self.txAvailable =True
-      self.dataBuffer = []
-      self.active = True
+
+    def __init__(self,conn):
+        QtCore.QObject.__init__(self)
+        asyncore.dispatcher_with_send.__init__(self,conn)
+
+    def handle_read(self):
+        data = self.recv(8192)
+        self.dataReceived.emit(data)
+        
+     
+            
+
+
+
+
+
+class connectionHandler(QtCore.QObject,asyncore.dispatcher):   
+    clientConnected = QtCore.pyqtSignal()
+
+    clients = []
+
+    def __init__(self,ip,port):
+      asyncore.dispatcher.__init__(self)
+      QtCore.QObject.__init__(self)
+      self.ip =ip
+      self.port = port
+     
 
 
     @QtCore.pyqtSlot()
-    def receiveData(self):  #here we should use class for odroid connection. 
-        a= 50
-        while self.active:
-            a+=1
-            if a>60:
-                a=50
-            time.sleep(0.3)
-            data=(a,1)
-            self.dataReceived.emit(data)
-    
-    @QtCore.pyqtSlot(object)
-    def sendData(self, data=[]):
-        self.dataBuffer=data
+    def run(self):  #here we should use class for odroid connection. 
+        self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.set_reuse_addr()
+        self.bind((self.ip,self.port))
+        self.listen(5)
+        
+        asyncore.loop()
+
 
     def stop(self):
         self.active=False
 
     def start(self):
         self.active = True
+
+        #asyncore specific
+    def handle_accept(self):
+        client_info = self.accept()
+        if client_info is not None:
+            conn, addr = client_info
+            print("connected with: ", addr)
+            self.clients.append (clientHandler(conn))
+            self.clientConnected.emit()

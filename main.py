@@ -14,32 +14,44 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupThread()
         self.connectButtons()
 
+
     def connectButtons(self):
         self.connectionBar.b_connect.pressed.connect(self.manageConnection)
       
     def setupThread(self):
-        self.telemetryThread=QtCore.QThread() 
-        self.handler = connectionHandler()
-        self.handler.moveToThread(self.telemetryThread)
-        self.telemetryThread.started.connect(self.handler.receiveData)
-        self.handler.dataReceived.connect(self.updateWidgets)
+        self.serverThread=QtCore.QThread() 
+        self.server = connectionHandler('localhost',8080)
+        self.server.moveToThread(self.serverThread)
+        self.clientsconnected = 0
+        self.serverThread.started.connect(self.server.run)
+        self.server.clientConnected.connect(self.setupConnection)
+
+
+
+    def setupConnection(self):
+        self.server.clients[self.clientsconnected].dataReceived.connect(self.updateWidgets)
+        self.clientsconnected += 1
         
 
     def manageConnection(self):
-        if self.telemetryThread.isRunning():
-            self.handler.dataReceived.disconnect()
-            self.handler.stop()
-            self.telemetryThread.exit()
+        if self.serverThread.isRunning():
+            print(self.clientsconnected)
+            for i in range (self.clientsconnected):
+                self.server.clients[i].dataReceived.disconnect()
+                self.server.clients[i].close()
+            self.clientsconnected = 0
+            self.server.stop()
+            self.serverThread.exit()
         else:
-            self.telemetryThread.start()
-            self.handler.start()
-            self.handler.dataReceived.connect(self.updateWidgets)
-            self.connectionBar.sendData.connect(self.handler.sendData)
+            self.serverThread.start()
+            self.server.start()
+            
 
 
     def updateWidgets(self, data):
-        hum = data[0] 
-        self.connectionBar.update(hum)
+        #print(data)
+        #hum = data[0] 
+        self.connectionBar.update(data)
 
 
 def main():
